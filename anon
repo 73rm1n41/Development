@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+import os
+import sys
+import time
+from datetime import datetime
+from random import randint
+from termcolor import colored
+stime = str(datetime.now())
+sys.path.insert(0, '/usr/share/dpkali')
+import anontime
+def main():
+    def randig(n):
+        range_start = 10**(n-1)
+        range_end = (10**n)-1
+        return randint(range_start, range_end)
+    os.system("ifconfig eth0 192.168.1."+str(randig(2))+" netmask 255.255.255.0")
+    xatime = int(anontime.x + 1)
+    yatime = int(anontime.y + 1)
+    xtime = str(xatime)
+    ytime = str(yatime)
+    with open("/usr/share/dpkali/anontime.py" ,'w') as atime:
+        atime.write("#!/usr/bin/env python\nx = "+xtime+"\ny = "+ytime)
+    atime.close()
+    if anontime.x >= 1:
+        os.system("ifconfig eth0 down")
+        os.system("macchanger -rb eth0")
+        os.system("ifconfig eth0 up")
+        os.system("ifconfig wlan0 192.168.1."+str(randig(2))+" netmask 255.255.255.0")
+    if anontime.y >= 1:
+        os.system("ifconfig wlan0 down")
+        os.system("macchanger -rb eth0")
+        os.system("ifconfig wlan0 up")
+    reload(anontime)
+    print colored("+-",'blue',attrs=['bold'])*60
+    print colored("-+",'red',attrs=['bold'])*60
+    print("\n")
+    os.system("ifconfig eth0")
+    print("\n")
+    print colored("/\\",'blue',attrs=['bold'])*60
+    print colored("||",'red',attrs=['bold'])*60
+    print colored("==",'blue',attrs=['bold'])*60
+    print colored("||",'red',attrs=['bold'])*60
+    print colored("\\/",'blue',attrs=['bold'])*60
+    print("\n")
+    os.system("ifconfig wlan0")
+    print("\n")
+    print colored("##",'red',attrs=['bold'])*60
+    print colored("[*]",'yellow',attrs=['bold'])+colored(" ETH0",'magenta',attrs=['bold'])+colored(" HAS BEEN CHANGED ",'blue',attrs=['bold'])+colored(str(anontime.x),'magenta',attrs=['bold'])+colored(" TIMES SINCE ",'blue',attrs=['bold'])+colored(stime,'yellow',attrs=['bold'])
+    print colored("[*]",'yellow',attrs=['bold'])+colored(" WLAN0",'magenta',attrs=['bold'])+colored(" HAS BEEN CHANGED ",'blue',attrs=['bold'])+colored(str(anontime.y),'magenta',attrs=['bold'])+colored(" TIMES SINCE ",'blue',attrs=['bold'])+colored(stime,'yellow',attrs=['bold'])
+    ltime = str(datetime.now())
+    print colored("[*] ",'yellow',attrs=['bold'])+colored("INTERFACES LAST UPDATED AT: ",'blue',attrs=['bold'])+colored(ltime,'magenta',attrs=['bold'])
+    time.sleep(60)
+    os.system('clear')
+    os.system('clear')
+def execute_anon():
+    try:
+        while True:
+            main()
+    except KeyboardInterrupt:
+        print colored("\n[!]",'yellow',attrs=['bold'])+colored(" USER HIT CTRL+C\n    PROGRAM TERMINATING...",'red',attrs=['bold'])
+        with open("/usr/share/dpkali/anontime.py" ,'w') as atime:
+            atime.write("#!/usr/bin/env python\nx = 0\ny = 0")
+        atime.close()
+        time.sleep(2)
+        sys.exit()
+execute_anon()

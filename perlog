@@ -1,0 +1,198 @@
+#!/usr/bin/perl
+use Term::ANSIColor;
+# This Variable Controls The Speed Of PerLog
+# The UFW Log Is Not Affected By This Variable
+my $x = 3;
+# This Is The Variable To Control The Speed Of The UFW Log ONLY
+my $y = 5;
+################################################################
+# DO NOT EDIT BELOW THIS LINE
+################################################################
+for ( ; ; ) {
+	clear();
+	logo();
+    my $journ = `journalctl -n 13`;
+    chomp $journ;
+	my $syslog = `tail -n 13 /var/log/syslog`;
+    chomp $syslog;
+    my $ufwlog = `tail -n 9 /var/log/ufw.log`;
+    chomp $ufwlog;
+	my $kernlog = `tail -n 21 /var/log/kern.log`;
+    chomp $kernlog;
+	my $authlog = `tail -n 21 /var/log/auth.log`;
+    chomp $authlog;
+	my $userlog = `tail -n 12 /var/log/user.log`;
+    chomp $userlog;
+	my $daemonlog = `tail -n 18 /var/log/daemon.log`;
+    chomp $daemonlog;
+	my $faillog = `tail -n 13 /var/log/faillog`;
+    chomp $faillog;
+	my $messages = `tail -n 12 /var/log/messages`;
+    chomp $messages;
+	my $apthistory = `tail -n 10 /var/log/apt/history.log`;
+    chomp $apthistory;
+	my $dpkglog = `tail -n 13 /var/log/dpkg.log`;
+    chomp $dpkglog;
+	my $sshlog = `journalctl -u ssh |tail -10`;
+    chomp $sshlog;
+	my $apaccess = `tail -n 13 /var/log/apache2/access.log`;
+    chomp $apaccess;
+	my $aperror = `tail -n 13 /var/log/apache2/error.log`;
+    chomp $aperror;
+	my $apvhost = `tail -n 13 /var/log/apache2/other_vhosts_access.log`;
+    chomp $apvhost;
+    sep();
+    print colored("					### JournalCtl ###", 'cyan');
+    sep();
+    print colored("$journ\n", 'cyan');
+    sleep($x);
+    clear();
+    logo();
+	sep();
+	print colored("					### System Log ###", 'blue');
+	sep();
+	print colored("$syslog\n", 'blue');
+	sleep($x);
+	clear();
+    logo();
+    sep();
+    print colored("					### UFW Log ###", 'magenta');
+    sep();
+    print colored("$ufwlog\n", 'magenta');
+    sleep($y);
+    clear();
+	logo();
+	sep();
+	print colored("					### Kernel Log ###", 'yellow');
+	sep();
+	print colored("$kernlog\n", 'yellow');
+	sleep($x);
+	clear();
+	logo();
+	sep();
+	print colored("					### Auth Log ###", 'red');
+	sep();
+	print colored("$authlog\n", 'red');
+	sleep($x);
+	clear();
+	logo();
+	sep();
+	print colored("					### User Log ###", 'white');
+	sep();
+	print colored("$userlog", 'white');
+	sleep($x);
+	clear();
+	logo();
+	sep();
+	print colored("					### Daemon Log ###", 'yellow');
+	sep();
+	print colored("$daemonlog\n", 'yellow');
+	sleep($x);
+	clear();
+	logo();
+	sep();
+	print colored("					### Fail Log ###", 'red');
+	sep();
+	print colored("$faillog\n", 'red');
+	sleep($x);
+	clear();
+	logo();
+	sep();
+	print colored("					### Messages Log ###", 'white');
+	sep();
+	print colored("$messages\n", 'white');
+	sleep($x);
+	clear();
+	logo();
+	sep();
+	print colored("					### Apt History Log ###", 'magenta');
+	sep();
+	print colored("$apthistory", 'magenta');
+	sleep($x);
+	clear();
+	logo();
+	sep();
+	print colored("					### DPKG Log ###", 'blue');
+	sep();
+	print colored("$dpkglog\n", 'blue');
+	sleep($x);
+	clear();
+	sep();
+	ssh();
+	sep();
+	print colored("$sshlog", 'yellow');
+	sleep($x);
+	clear();
+	sep();
+	apache();
+	sep();
+	print "\n";
+	sep2();
+	print colored("					### Access Log ###", 'white');
+	sep2();
+	print colored("$apaccess\n", 'white');
+	sleep($x);
+	clear();
+	sep();
+	apache();
+	sep();
+	print "\n";
+	sep2();
+	print colored("					### Error Log ###", 'magenta');
+	sep2();
+	print colored("$aperror\n", 'magenta');
+	sleep($x);
+	clear();
+	sep();
+	apache();
+	sep();
+	print "\n";
+	sep2();
+	print colored("				### Other Virtual Host Access ###", 'red');
+	sep2();
+	print colored("$apvhost", 'red');
+	sleep($x);
+}
+print "\nPerlog Was Stopped @ $date\n";
+sub clear {
+	system("clear");
+}
+sub logo {
+	my $date = localtime();
+	print colored("#################################################################################\n", 'blue');
+	print colored("#			 ____           _                			#\n", 'red');
+	print colored("#			|  _ \\ ___ _ __| |    ___   __ _ 			#\n", 'white');
+	print colored("#			| |_) / _ \\ '__| |   / _ \\ / _` |			#\n", 'blue');
+	print colored("#			|  __/  __/ |  | |__| (_) | (_| |			#\n", 'red');
+	print colored("#			|_|   \\___|_|  |_____\\___/ \\__, |			#\n", 'white');
+	print colored("#			                           |___/ 			#\n", 'blue');
+	print colored("#################################################################################\n", 'red');
+    print colored("$date", 'white');
+}
+sub sep {
+	print colored("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n",'blue');
+	print colored("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n",'white');
+}
+sub sep2 {
+	print colored("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n",'cyan');
+}
+sub ssh {
+    my $date = localtime();
+    print colored("                         ____ ____  _   _   _                    \n",'red');
+    print colored("                        / ___/ ___|| | | | | |    ___   __ _ ___ \n",'white');
+    print colored("                        \\___ \\___ \\| |_| | | |   / _ \\ / _` / __|\n",'blue');
+    print colored("                         ___) |__) |  _  | | |__| (_) | (_| \\__ \\\n",'red');
+    print colored("                        |____/____/|_| |_| |_____\\___/ \\__, |___/\n",'white');
+    print colored("                                                       |___/    ",'blue');
+    print colored("\n$date", 'white');
+}
+sub apache {
+    my $date = localtime();
+    print colored("            _                      _          ____    _                    \n",'blue');
+    print colored("           / \\    _ __   __ _  ___| |__   ___|___ \\  | |    ___   __ _ ___ \n",'red');
+    print colored("          / _ \\  | '_ \\ / _` |/ __| '_ \\ / _ \\ __) | | |   / _ \\ / _` / __|\n",'white');
+    print colored("         / ___ \\ | |_) | (_| | (__| | | |  __// __/  | |__| (_) | (_| \\__ \\\n",'blue');
+    print colored("        /_/   \\_\\  .__/ \\__,_|\\___|_| |_|\\___|_____| |_____\\___/ \\__, |___/\n",'red');
+    print colored("                 |_|                                             |___/     \n",'white');
+    print colored("\n$date", 'white');
+}
